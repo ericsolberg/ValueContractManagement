@@ -1,0 +1,5 @@
+{
+  "ProjectOverviewURL": "https://gartner-lcap-2025.launchpad.cfapps.us10.hana.ondemand.com/lcapcontracts.contractsLaunchpad-1.0.0/",
+  "DeployedUTCTime": "2025-10-30T01:29:30.268Z",
+  "ApplicationLogURL": "https://logs.cf.us10-002.hana.ondemand.com/app/dashboards#/view/Overview?_g=(filters:!((query:(match_phrase:(component_name:contracts-srv)))))"
+}

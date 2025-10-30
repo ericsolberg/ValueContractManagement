@@ -1,0 +1,186 @@
+{
+	"_version": "1.60.0",
+	"sap.app": {
+		"id": "valuecontractmanagement.customers",
+		"type": "application",
+		"i18n": {
+			"bundleUrl": "i18n/i18n.properties",
+			"supportedLocales": [
+				""
+			]
+		},
+		"applicationVersion": {
+			"version": "0.0.1"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"resources": "resources.json",
+		"sourceTemplate": {
+			"id": "@sap/generator-fiori:lrop",
+			"version": "1.19.3",
+			"toolsId": "6cd99c11-efd9-44cb-bfd6-0064fbed04a0"
+		},
+		"dataSources": {
+			"mainService": {
+				"uri": "service/ValueContractService/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"odataVersion": "4.0"
+				}
+			}
+		},
+		"crossNavigation": {
+			"inbounds": {
+				"valuecontractmanagementcustome-display": {
+					"semanticObject": "valuecontractmanagementcustome",
+					"action": "display",
+					"title": "{{valuecontractmanagementcustome-display.flpTitle}}",
+					"signature": {
+						"parameters": {},
+						"additionalParameters": "allowed"
+					}
+				}
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"flexEnabled": true,
+		"dependencies": {
+			"minUI5Version": "1.120.13",
+			"libs": {
+				"sap.m": {},
+				"sap.ui.core": {},
+				"sap.fe.templates": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "valuecontractmanagement.customers.i18n.i18n",
+					"supportedLocales": [
+						""
+					]
+				}
+			},
+			"": {
+				"dataSource": "mainService",
+				"preload": true,
+				"settings": {
+					"operationMode": "Server",
+					"autoExpandSelect": true,
+					"earlyRequests": true
+				}
+			},
+			"@i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties",
+				"settings": {
+					"supportedLocales": [
+						""
+					]
+				}
+			}
+		},
+		"resources": {
+			"css": []
+		},
+		"routing": {
+			"config": {},
+			"routes": [
+				{
+					"pattern": ":?query:",
+					"name": "KeyCustomersList",
+					"target": "KeyCustomersList"
+				},
+				{
+					"pattern": "KeyCustomers({key}):?query:",
+					"name": "KeyCustomersObjectPage",
+					"target": "KeyCustomersObjectPage"
+				}
+			],
+			"targets": {
+				"KeyCustomersList": {
+					"type": "Component",
+					"id": "KeyCustomersList",
+					"name": "sap.fe.templates.ListReport",
+					"options": {
+						"settings": {
+							"contextPath": "/KeyCustomers",
+							"variantManagement": "Page",
+							"navigation": {
+								"KeyCustomers": {
+									"detail": {
+										"route": "KeyCustomersObjectPage"
+									}
+								}
+							},
+							"controlConfiguration": {
+								"@com.sap.vocabularies.UI.v1.LineItem": {
+									"tableSettings": {
+										"type": "ResponsiveTable"
+									}
+								}
+							}
+						}
+					}
+				},
+				"KeyCustomersObjectPage": {
+					"type": "Component",
+					"id": "KeyCustomersObjectPage",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings": {
+							"editableHeaderContent": false,
+							"contextPath": "/KeyCustomers",
+							"content": {
+								"body": {
+									"sections": {
+										"Testsection": {
+											"template": "valuecontractmanagement.customers.ext.fragment.Testsection",
+											"position": {
+												"placement": "After",
+												"anchor": "GeneratedFacet1"
+											},
+											"title": "testsection"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"flexBundle": false
+	},
+	"sap.fiori": {
+		"registrationIds": [],
+		"archeType": "transactional"
+	},
+	"sap.cloud": {
+		"public": true,
+		"service": "lcap.contracts"
+	}
+}

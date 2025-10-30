@@ -1,0 +1,2 @@
+sap.ui.define(["sap/fe/test/ListReport"],function(t){"use strict";var e={actions:{},assertions:{}};return new t({appId:"valuecontractmanagement.customers",componentId:"KeyCustomersList",contextPath:"/KeyCustomers"},e)});
+//# sourceMappingURL=KeyCustomersList.js.map

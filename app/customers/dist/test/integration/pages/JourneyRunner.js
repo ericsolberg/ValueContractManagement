@@ -1,0 +1,2 @@
+sap.ui.define(["sap/fe/test/JourneyRunner","valuecontractmanagement/customers/test/integration/pages/KeyCustomersList","valuecontractmanagement/customers/test/integration/pages/KeyCustomersObjectPage"],function(e,t,a){"use strict";var s=new e({launchUrl:sap.ui.require.toUrl("valuecontractmanagement/customers")+"/test/flpSandbox.html#valuecontractmanagementcustome-tile",pages:{onTheKeyCustomersList:t,onTheKeyCustomersObjectPage:a},async:true});return s});
+//# sourceMappingURL=JourneyRunner.js.map

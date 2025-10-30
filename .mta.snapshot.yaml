@@ -1,0 +1,286 @@
+_schema-version: '3.1'
+ID: contracts
+version: 1.0.0
+description: A simple CAP project.
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+  subdomain: gartner-lcap-2025
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - rm -rf build/dist
+        - mkdir -p build/dist
+        - rm -rf build/ui-deployer
+        - mkdir -p build/ui-deployer
+        - mkdir -p build/ui-deployer/resources
+        - cp workzone/cdm.json build/ui-deployer/resources/cdm.json
+    - builder: custom
+      commands:
+        - npm install --production
+        - >-
+          bash -c "cds -v | grep 'cds-dk' || npm i --production --no-save
+          @sap/cds-dk"
+        - bash -c "export PATH=$PATH:$(pwd)/node_modules/.bin"
+        - cds build --production
+  after-all:
+    - builder: custom
+      commands:
+        - npm install
+modules:
+  - name: contracts-valuecontractmanagement.contracts
+    type: html5
+    path: app/contracts
+    build-parameters:
+      builder: custom
+      commands:
+        - rm -rf dist-zip dist
+        - npm install
+        - >-
+          npx -p @ui5/cli@^3.0.0 ui5 build --dest dist
+          --include-task=generateCachebusterInfo
+        - mkdir dist-zip
+        - >-
+          bash -c "cd dist && npx bestzip
+          ../dist-zip/valuecontractmanagementcontracts.zip *"
+      _artifactName: valuecontractmanagementcontracts.zip
+      supported-platforms: []
+      build-result: dist-zip
+  - name: contracts-valuecontractmanagement.customers
+    type: html5
+    path: app/customers
+    build-parameters:
+      builder: custom
+      commands:
+        - rm -rf dist-zip dist
+        - npm install
+        - >-
+          npx -p @ui5/cli@^3.0.0 ui5 build --dest dist
+          --include-task=generateCachebusterInfo
+        - mkdir dist-zip
+        - >-
+          bash -c "cd dist && npx bestzip
+          ../dist-zip/valuecontractmanagementcustomers.zip *"
+      _artifactName: valuecontractmanagementcustomers.zip
+      supported-platforms: []
+      build-result: dist-zip
+  - name: contracts-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+      ignore:
+        - node_modules
+        - package-lock.json
+    requires:
+      - name: contracts-service-uaa
+      - name: contracts-service-db
+  - name: contracts-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      memory: 256MB
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    build-parameters:
+      builder: npm
+      ignore:
+        - node_modules
+        - package-lock.json
+    requires:
+      - name: contracts-service-uaa
+      - name: contracts-service-db
+      - name: contracts-service-destination
+      - name: contracts-service-metadata
+      - name: contracts-service-connectivity
+      - name: contracts-service-logs
+  - name: contracts-aux-destinations
+    type: com.sap.application.content
+    parameters:
+      content:
+        subaccount:
+          existing_destinations_policy: update
+          destinations:
+            - Authentication: OAuth2UserTokenExchange
+              Name: contracts-service-uaa
+              ServiceInstanceName: contracts-uaa
+              ServiceKeyName: contracts-uaa-key
+              sap.cloud.service: lcap.contracts
+            - Name: contracts-service-html5-apps-repo-host
+              ServiceInstanceName: contracts-html5-apps-repo-host
+              ServiceKeyName: contracts-html5-apps-repo-host-key
+              sap.cloud.service: lcap.contracts
+            - Name: contracts-html5-content-dt
+              ServiceInstanceName: contracts-html5-apps-repo-runtime
+              ServiceKeyName: contracts-html5-apps-repo-runtime-key
+              URL: >-
+                https://html5-apps-repo-rt.${default-domain}/applications/cdm/lcap.contracts
+            - Authentication: OAuth2UserTokenExchange
+              Name: contracts-ValueContractService
+              TokenServiceInstanceName: contracts-uaa
+              TokenServiceKeyName: contracts-uaa-key
+              URL: ~{srv-api/srv-url}/service/ValueContractService
+              sap.cloud.service: lcap.contracts
+              sap.applicationdevelopment.actions.enabled: false
+              sap.build.usage: CAP
+              sap.processautomation.enabled: false
+              HTML5.DynamicDestination: false
+              WebIDEEnabled: false
+              MobileEnabled: false
+              AppgyverEnabled: false
+            - Authentication: OAuth2UserTokenExchange
+              Name: contracts-AdminService
+              TokenServiceInstanceName: contracts-uaa
+              TokenServiceKeyName: contracts-uaa-key
+              URL: ~{srv-api/srv-url}/service/AdminService
+              sap.cloud.service: lcap.contracts
+              sap.applicationdevelopment.actions.enabled: false
+              sap.build.usage: CAP
+              sap.processautomation.enabled: false
+              HTML5.DynamicDestination: false
+              WebIDEEnabled: false
+              MobileEnabled: false
+              AppgyverEnabled: false
+    build-parameters:
+      no-source: true
+    requires:
+      - name: contracts-service-uaa
+        parameters:
+          service-key:
+            name: contracts-uaa-key
+      - name: srv-api
+      - name: contracts-service-html5-apps-repo-host
+        parameters:
+          service-key:
+            name: contracts-html5-apps-repo-host-key
+      - name: contracts-service-html5-apps-repo-runtime
+        parameters:
+          service-key:
+            name: contracts-html5-apps-repo-runtime-key
+      - name: contracts-service-destination
+        parameters:
+          content-target: true
+  - name: contracts-launchpad
+    type: html5
+    path: build/launchpad
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - >-
+          npx -p @ui5/cli@^3.0.0 ui5 build --dest dist
+          --include-task=generateCachebusterInfo
+        - bash -c "cd dist && npx bestzip ../../../build/dist/launchpad.zip *"
+        - rm -rf dist
+      _artifactName: launchpad.zip
+      supported-platforms: []
+      build-result: ../../build/dist
+  - name: contracts-aux-ui-deployer
+    type: com.sap.application.content
+    path: build/ui-deployer
+    build-parameters:
+      build-result: resources
+      requires:
+        - name: contracts-valuecontractmanagement.contracts
+          artifacts:
+            - valuecontractmanagementcontracts.zip
+          target-path: resources
+        - name: contracts-valuecontractmanagement.customers
+          artifacts:
+            - valuecontractmanagementcustomers.zip
+          target-path: resources
+        - name: contracts-launchpad
+          artifacts:
+            - launchpad.zip
+          target-path: resources
+    parameters:
+      config:
+        destinations:
+          - forwardAuthToken: true
+            name: contracts-app-srv
+            url: ~{srv-api/srv-url}
+    requires:
+      - name: srv-api
+      - name: contracts-service-uaa
+      - name: contracts-service-html5-apps-repo-host
+        parameters:
+          content-target: true
+resources:
+  - type: org.cloudfoundry.managed-service
+    name: contracts-service-uaa
+    parameters:
+      service: xsuaa
+      service-plan: application
+      service-name: contracts-uaa
+      path: xs-security.json
+      config:
+        oauth2-configuration:
+          redirect-uris:
+            - https://${subdomain}.launchpad.${default-domain}/login/*
+            - https://${subdomain}.${default-domain}/login/*
+          credential-types:
+            - binding-secret
+            - x509
+        xsappname: contracts-${space}
+        role-collections: []
+  - type: org.cloudfoundry.managed-service
+    name: contracts-service-db
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+      service-name: contracts-db
+  - type: org.cloudfoundry.managed-service
+    name: contracts-service-destination
+    parameters:
+      service: destination
+      service-plan: lite
+      service-name: contracts-destination
+      config:
+        version: 1.0.0
+        init_data:
+          subaccount:
+            destinations:
+              - Name: contracts-html5-content-rt
+                Authentication: NoAuthentication
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://${subdomain}.launchpad.${default-domain}
+                CEP.HTML5contentprovider: true
+            existing_destinations_policy: update
+  - type: org.cloudfoundry.user-provided-service
+    name: contracts-service-metadata
+    parameters:
+      service: metadata
+      service-plan: standard
+      service-name: contracts-metadata
+      config:
+        default-domain: ${default-domain}
+  - type: org.cloudfoundry.managed-service
+    name: contracts-service-connectivity
+    parameters:
+      service: connectivity
+      service-plan: lite
+      service-name: contracts-connectivity
+  - type: org.cloudfoundry.managed-service
+    name: contracts-service-logs
+    parameters:
+      service: application-logs
+      service-plan: lite
+      service-name: contracts-logs
+  - type: org.cloudfoundry.managed-service
+    name: contracts-service-html5-apps-repo-host
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+      service-name: contracts-html5-apps-repo-host
+  - type: org.cloudfoundry.managed-service
+    name: contracts-service-html5-apps-repo-runtime
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+      service-name: contracts-html5-apps-repo-runtime

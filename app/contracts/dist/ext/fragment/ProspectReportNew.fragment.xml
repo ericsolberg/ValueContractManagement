@@ -1,0 +1,36 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <VBox
+        class="sapUiResponsiveContentPadding"
+        width="100%"
+        id="vbox1"
+    >
+        <Toolbar id="toolbar1" width="600px">
+            <Title
+                text="Generated November 4, 2025"
+                level="H3"
+                id="title1"
+            />
+            <ToolbarSpacer id="sp1"/>
+            <!-- Open in new tab / download -->
+            <Link
+                text="Download PDF"
+                href="https://gartner-lcap-2025.workzone.cfapps.us10.hana.ondemand.com/lcapcontracts.valuecontractmanagementcontracts-0.0.1/assets/prospect-report-after.pdf"
+                target="_blank"
+                icon="sap-icon://download"
+                id="dl1"
+            />
+        </Toolbar>
+
+        <core:HTML
+            id="prospectPdfFrame"
+            sanitizeContent="false"
+            content="&lt;iframe
+               src='https://gartner-lcap-2025.workzone.cfapps.us10.hana.ondemand.com/lcapcontracts.valuecontractmanagementcontracts-0.0.1/assets/prospect-report-after.pdf#toolbar=0&amp;navpanes=0&amp;scrollbar=1'
+               style='border:0;width:600px;height:600px;'
+               loading='lazy'&gt;&lt;/iframe&gt;"
+        />
+    </VBox>
+</core:FragmentDefinition>

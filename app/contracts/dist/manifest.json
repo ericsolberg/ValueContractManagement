@@ -1,0 +1,196 @@
+{
+	"_version": "1.73.1",
+	"sap.app": {
+		"id": "valuecontractmanagement.contracts",
+		"type": "application",
+		"i18n": {
+			"bundleUrl": "i18n/i18n.properties",
+			"supportedLocales": [
+				""
+			]
+		},
+		"applicationVersion": {
+			"version": "0.0.1"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"resources": "resources.json",
+		"sourceTemplate": {
+			"id": "@sap/generator-fiori:lrop",
+			"version": "1.19.3",
+			"toolsId": "dc41e2a3-e5b7-4a2d-8f73-05e69ef84936"
+		},
+		"dataSources": {
+			"mainService": {
+				"uri": "service/ValueContractService/",
+				"type": "OData",
+				"settings": {
+					"annotations": [],
+					"odataVersion": "4.0"
+				}
+			}
+		},
+		"crossNavigation": {
+			"inbounds": {
+				"customers-display": {
+					"semanticObject": "customers",
+					"action": "display",
+					"signature": {
+						"parameters": {},
+						"additionalParameters": "allowed"
+					}
+				}
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"flexEnabled": true,
+		"dependencies": {
+			"minUI5Version": "1.136.7",
+			"libs": {
+				"sap.m": {},
+				"sap.ui.core": {},
+				"sap.fe.templates": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "valuecontract.contracts.contracts.i18n.i18n"
+				}
+			},
+			"": {
+				"dataSource": "mainService",
+				"preload": true,
+				"settings": {
+					"operationMode": "Server",
+					"autoExpandSelect": true,
+					"earlyRequests": true
+				}
+			},
+			"@i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"uri": "i18n/i18n.properties",
+				"settings": {
+					"supportedLocales": [
+						""
+					]
+				}
+			}
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		},
+		"routing": {
+			"config": {},
+			"routes": [
+				{
+					"pattern": ":?query:",
+					"name": "ValueContractsList",
+					"target": "ValueContractsList"
+				},
+				{
+					"pattern": "ValueContracts({key}):?query:",
+					"name": "ValueContractsObjectPage",
+					"target": "ValueContractsObjectPage"
+				}
+			],
+			"targets": {
+				"ValueContractsList": {
+					"type": "Component",
+					"id": "ValueContractsList",
+					"name": "sap.fe.templates.ListReport",
+					"options": {
+						"settings": {
+							"contextPath": "/ValueContracts",
+							"variantManagement": "Page",
+							"navigation": {
+								"ValueContracts": {
+									"detail": {
+										"route": "ValueContractsObjectPage"
+									}
+								}
+							},
+							"controlConfiguration": {
+								"@com.sap.vocabularies.UI.v1.LineItem": {
+									"tableSettings": {
+										"type": "ResponsiveTable"
+									},
+									"actions": {
+										"credCheck": {
+											"press": "valuecontractmanagement.contracts.ext.controller.ListReport.onCreditCheckPress",
+											"visible": true,
+											"enabled": true,
+											"requiresSelection": false,
+											"text": "Perform Credit Analysis"
+										}
+									}
+								}
+							},
+							"initialLoad": "Enabled"
+						}
+					}
+				},
+				"ValueContractsObjectPage": {
+					"type": "Component",
+					"id": "ValueContractsObjectPage",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings": {
+							"editableHeaderContent": false,
+							"contextPath": "/ValueContracts",
+							"content": {
+								"body": {
+									"sections": {
+										"ProspectReportNew": {
+											"template": "valuecontractmanagement.contracts.ext.fragment.ProspectReportNew",
+											"position": {
+												"placement": "After",
+												"anchor": "GeneralFacet1"
+											},
+											"title": "Prospect Research Agent Report"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"flexBundle": false
+	},
+	"sap.fiori": {
+		"registrationIds": [],
+		"archeType": "transactional"
+	},
+	"sap.cloud": {
+		"public": true,
+		"service": "lcap.contracts"
+	}
+}

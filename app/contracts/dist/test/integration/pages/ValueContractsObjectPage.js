@@ -1,0 +1,2 @@
+sap.ui.define(["sap/fe/test/ObjectPage"],function(t){"use strict";var e={actions:{},assertions:{}};return new t({appId:"valuecontractmanagement.contracts",componentId:"ValueContractsObjectPage",contextPath:"/ValueContracts"},e)});
+//# sourceMappingURL=ValueContractsObjectPage.js.map
