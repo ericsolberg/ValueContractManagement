@@ -38,7 +38,6 @@ sap.ui.define([
                     .execute()
                     .then(async () => {
                         await applySideEffects(oCtx, ["creditStatus"]);
-                        MessageToast.show(`Credit status set to Pending for contract ${contractId}.`);
                     })
                     .catch((err) => {
                         console.error("setCreditPending failed:", err);
@@ -70,7 +69,7 @@ sap.ui.define([
                                     }
                                     MessageBox.error(`Prospect Research Agent check failed for contract ${contractId}: ${errorMessage}`);
                                 });
-                        }, 10000);
+                        }, 5000);
                     })
                     .catch((err) => {
                         console.error("setCreditUnderReview failed:", err);
