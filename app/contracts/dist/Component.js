@@ -1,2 +1,2 @@
-sap.ui.define(["sap/fe/core/AppComponent"],function(e){"use strict";return e.extend("valuecontractmanagement.contracts.Component",{metadata:{manifest:"json"}})});
+sap.ui.define(["sap/fe/core/AppComponent","sap/ui/model/json/JSONModel"],function(t,e){"use strict";return t.extend("valuecontractmanagement.contracts.Component",{metadata:{manifest:"json"},init:function(){t.prototype.init.apply(this,arguments);const o=sap.ui.require.toUrl("valuecontractmanagement/contracts/assets/");const n=new e({baseUrl:o,pdfFile:"prospect-report-after.pdf",pdfBefore:"prospect-report-before.pdf",pdfAfter:"prospect-report-after.pdf",contractIcon:"ContractIcon.png"});this.setModel(n,"assets")}})});
 //# sourceMappingURL=Component.js.map

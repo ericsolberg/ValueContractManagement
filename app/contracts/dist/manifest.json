@@ -165,6 +165,16 @@
 							"editableHeaderContent": false,
 							"contextPath": "/ValueContracts",
 							"content": {
+								"header": {
+									"actions": {
+										"credCheck": {
+											"press": "valuecontractmanagement.contracts.ext.controller.ObjectPage.onCreditCheckPress",
+											"visible": true,
+											"enabled": true,
+											"text": "Perform Credit Analysis"
+										}
+									}
+								},
 								"body": {
 									"sections": {
 										"ProspectReportNew": {
@@ -179,6 +189,15 @@
 								}
 							}
 						}
+					}
+				}
+			}
+		},
+		"extends": {
+			"extensions": {
+				"sap.ui.controllerExtensions": {
+					"sap.fe.templates.ObjectPage.ObjectPageController": {
+						"controllerName": "valuecontractmanagement.contracts.ext.controller.OPExt"
 					}
 				}
 			}

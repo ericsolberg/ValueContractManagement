@@ -43,7 +43,6 @@ entity ValueContracts : cuid, managed {
         'Rejected',
         'Under Review'
     ]  default 'Pending';
-    lastCreditCheck : DateTime                     @title: 'Last Credit Check';
     prospectReport  : LargeString                  @title: 'Prospect Report';
 
     // Navigation

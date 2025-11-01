@@ -6,10 +6,13 @@
         class="sapUiResponsiveContentPadding"
         width="100%"
         id="vbox1"
-    >
+        binding="{ path: '$context>' }"
+        >
         <Toolbar id="toolbar1" width="600px">
             <Title
-                text="Generated November 4, 2025"
+                text="{= ${creditStatus} !== 'Approved'
+                    ? 'Pending credit review'
+                    : ( ${ path: 'contractValue', targetType: 'any' } >= 500000 &amp;&amp; 'Generated November 4, 2025' ) || 'Generated January 15, 2025' }"
                 level="H3"
                 id="title1"
             />
@@ -17,20 +20,32 @@
             <!-- Open in new tab / download -->
             <Link
                 text="Download PDF"
-                href="https://gartner-lcap-2025.workzone.cfapps.us10.hana.ondemand.com/lcapcontracts.valuecontractmanagementcontracts-0.0.1/assets/prospect-report-after.pdf"
+                href="{= ${assets>/baseUrl} + ( ${ path: 'contractValue', targetType: 'any' } >= 500000 ? ${assets>/pdfBefore} : ${assets>/pdfAfter} ) }"
                 target="_blank"
                 icon="sap-icon://download"
                 id="dl1"
+                visible="{= ${ path: 'creditStatus', targetType: 'any' } === 'Approved' }"
             />
         </Toolbar>
-
         <core:HTML
             id="prospectPdfFrame"
             sanitizeContent="false"
-            content="&lt;iframe
-               src='https://gartner-lcap-2025.workzone.cfapps.us10.hana.ondemand.com/lcapcontracts.valuecontractmanagementcontracts-0.0.1/assets/prospect-report-after.pdf#toolbar=0&amp;navpanes=0&amp;scrollbar=1'
-               style='border:0;width:600px;height:600px;'
-               loading='lazy'&gt;&lt;/iframe&gt;"
+            content="{= ${ path: 'contractValue', targetType: 'any' } >= 500000 ? 
+                '&lt;iframe src=&quot;'
+                + ${assets>/baseUrl}
+                + ${assets>/pdfAfter}
+                + '#toolbar=0&amp;navpanes=0&amp;scrollbar=1&quot; '
+                + 'style=&quot;border:0;width:600px;height:600px;&quot; '
+                + 'loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;' 
+                :
+                '&lt;iframe src=&quot;'
+                + ${assets>/baseUrl}
+                + ${assets>/pdfBefore}
+                + '#toolbar=0&amp;navpanes=0&amp;scrollbar=1&quot; '
+                + 'style=&quot;border:0;width:600px;height:600px;&quot; '
+                + 'loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;'                 
+                }"
+                visible="{= ${ path: 'creditStatus', targetType: 'any' } === 'Approved' }"
         />
     </VBox>
 </core:FragmentDefinition>

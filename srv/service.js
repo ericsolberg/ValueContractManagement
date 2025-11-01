@@ -26,23 +26,55 @@ module.exports = cds.service.impl(async function () {
     });
 
     this.on('setCreditPending', ValueContracts, async (req) => {
-        //const { newStatus, comments } = req.data;
-        const contractId = req.params[0].ID || req.params[0];
+            //const { newStatus, comments } = req.data;
+            const contractId = req.params[0].ID || req.params[0];
+    
+            // Get the current  record
+            const contract = await SELECT.one.from(ValueContracts).where({ ID: contractId });
+            if (!contract) {
+                req.error(404, 'Value Contract not found');
+            }
+    
+            console.log(`Setting credit Pending: ${contractId}`);
+    
+            const updated = await UPDATE(ValueContracts).set({ creditStatus: 'Pending' }).where({ ID: contractId })
+    
+            req.info(`Set to pending ${contract.contractNumber}`);
+    
+        });
+/*
+    this.on('setCreditPending', 'ValueContracts', async (req) => {
+        const db = await cds.connect.to('db');
 
-        // Get the current  record
-        const contract = await SELECT.one.from(ValueContracts).where({ ID: contractId });
-        if (!contract) {
-            req.error(404, 'Value Contract not found');
+        // Resolve persistence entities (no virtual elements here)
+        // Adjust names if your model is namespaced
+        const VC_ACTIVE = db.entities.ValueContracts;
+        const VC_DRAFT = db.entities.ValueContracts_drafts || db.entities['ValueContracts.drafts'];
+
+        const p = req.params?.[0] ?? {};
+        const id = p.ID ?? p; // support both shapes
+
+        // 1) Try ACTIVE
+        let row = await db.read(VC_ACTIVE).byKey({ ID: id });
+        console.log('[setCreditPending] active exists?', !!row, 'ID=', id);
+
+        // 2) If not found, try DRAFT (for diagnostics + edge timing)
+        if (!row && VC_DRAFT) {
+            const d = await db.read(VC_DRAFT).byKey({ ID: id });
+            console.log('[setCreditPending] draft exists?', !!d, 'ID=', id);
         }
 
-                console.log(`Setting credit Pending: ${contractId}`);
+        if (!row) {
+            // If you *want* to allow calling against draft (rare afterSave), you could:
+            // await db.update(VC_DRAFT).set({ creditStatus: 'Pending' }).where({ ID: id });
+            return req.error(404, 'Value Contract not found in ACTIVE table');
+        }
 
-    const updated = await UPDATE(ValueContracts).set({ creditStatus: 'Pending' }).where({ ID: contractId })
-
-        req.info(`Set to pending ${contract.contractNumber}`);
-
+        await db.update(VC_ACTIVE).set({ creditStatus: 'Pending' }).where({ ID: id });
+        req.info(`Set credit to Pending for ID=${id}`);
+        return { success: true };
     });
-
+*/
     this.on('setCreditUnderReview', ValueContracts, async (req) => {
         //const { newStatus, comments } = req.data;
         const contractId = req.params[0].ID || req.params[0];
@@ -60,9 +92,6 @@ module.exports = cds.service.impl(async function () {
         req.info(`Credit under review ${contract.contractNumber}`);
 
     });
-
-
-
 
 
     this.on('triggerCreditCheck', async (req) => {

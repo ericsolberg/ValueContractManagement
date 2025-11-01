@@ -6,6 +6,9 @@ sap.ui.define([
 
     return {
         onCreditCheckPress: function (oContext, aSelectedContexts) {
+
+             MessageToast.show("You are here.");
+
             // Check if any contexts are selected
             if (!aSelectedContexts || aSelectedContexts.length === 0) {
                 MessageToast.show("Please select at least one contract to perform credit check.");

@@ -45,10 +45,6 @@ annotate service.ValueContracts with @(
                 $Type: 'UI.DataField',
                 Value: creditStatus,
             },
-            {
-                $Type: 'UI.DataField',
-                Value: lastCreditCheck,
-            },
         ],
     },
     UI.Facets                    : [{
