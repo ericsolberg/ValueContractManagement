@@ -43,7 +43,6 @@ entity ValueContracts : cuid, managed {
         'Rejected',
         'Under Review'
     ]  default 'Pending';
-    prospectReport  : LargeString                  @title: 'Prospect Report';
 
     // Navigation
     assessments     : Composition of many CreditAssessments
