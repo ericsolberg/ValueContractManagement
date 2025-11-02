@@ -164,18 +164,6 @@
                       "text": "Perform Credit Analysis"
                     }
                   }
-                },
-                "body": {
-                  "sections": {
-                    "ProspectReportNew": {
-                      "template": "valuecontractmanagement.contracts.ext.fragment.ProspectReportNew",
-                      "position": {
-                        "placement": "After",
-                        "anchor": "GeneralFacet1"
-                      },
-                      "title": "Prospect Research Agent Report"
-                    }
-                  }
                 }
               }
             }

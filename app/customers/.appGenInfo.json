@@ -10,7 +10,7 @@
     "appDescription": "Manage key customers and their credit profiles",
     "appNamespace": "",
     "ui5Theme": "sap_horizon",
-    "ui5Version": "1.120.13",
+    "ui5Version": "1.141.3",
     "showMockDataInfo": false,
     "generatorVersion": "1.19.3",
     "template": "List Report Page V4",
